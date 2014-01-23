@@ -44,7 +44,7 @@ type logResult struct {
 //------------------------------------------------------------------------------
 
 // Creates a new log.
-func newLog() *Log {
+func NewLog() *Log {
 	return &Log{
 		entries:   make([]*LogEntry, 0),
 		pBuffer:   proto.NewBuffer(nil),
@@ -61,6 +61,10 @@ func newLog() *Log {
 //--------------------------------------
 // Log Indices
 //--------------------------------------
+
+func (l *Log) Entries() []*LogEntry {
+    return l.entries
+}
 
 // The last committed index in the log.
 func (l *Log) CommitIndex() uint64 {
@@ -135,6 +139,11 @@ func (l *Log) currentTerm() uint64 {
 
 // Opens the log file and reads existing entries. The log can remain open and
 // continue to append entries to the end of the log.
+
+func (l *Log) Open(path string) error {
+    return l.open(path)
+}
+
 func (l *Log) open(path string) error {
 	// Read all the entries from the log if one exists.
 	var readBytes int64
@@ -163,8 +172,9 @@ func (l *Log) open(path string) error {
 		// Instantiate log entry and decode into it.
 		entry, _ := newLogEntry(l, nil, 0, 0, nil)
 		entry.Position, _ = l.file.Seek(0, os.SEEK_CUR)
-
+        fmt.Printf("Position: %d\n", entry.Position)
 		n, err := entry.decode(l.file)
+        fmt.Printf("readBytes: %d\n", n)
 		if err != nil {
 			if err == io.EOF {
 				debugln("open.log.append: finish ")
@@ -195,6 +205,10 @@ func (l *Log) open(path string) error {
 }
 
 // Closes the log file.
+
+func (l *Log) Close() {
+    l.close()
+}
 func (l *Log) close() {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
@@ -492,6 +506,9 @@ func (l *Log) appendEntries(entries []*LogEntry) error {
 }
 
 // Writes a single log entry to the end of the log.
+func (l *Log) AppendEntry(entry *LogEntry) error {
+    return l.appendEntry(entry)
+}
 func (l *Log) appendEntry(entry *LogEntry) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()

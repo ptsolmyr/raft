@@ -166,7 +166,7 @@ func NewServer(name string, path string, transporter Transporter, stateMachine S
 		context:                 ctx,
 		state:                   Stopped,
 		peers:                   make(map[string]*Peer),
-		log:                     newLog(),
+		log:                     NewLog(),
 		stopped:                 make(chan bool),
 		c:                       make(chan *ev, 256),
 		electionTimeout:         DefaultElectionTimeout,

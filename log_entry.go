@@ -21,6 +21,9 @@ type LogEntry struct {
 }
 
 // Creates a new log entry associated with a log.
+func NewLogEntry(log *Log, event *ev, index uint64, term uint64, command Command) (*LogEntry, error) {
+    return newLogEntry(log, event, index, term, command)
+}
 func newLogEntry(log *Log, event *ev, index uint64, term uint64, command Command) (*LogEntry, error) {
 	var buf bytes.Buffer
 	var commandName string
@@ -95,5 +98,5 @@ func (e *LogEntry) decode(r io.Reader) (int, error) {
 	e.CommandName = pb.GetCommandName()
 	e.Command = pb.Command
 
-	return length, nil
+	return length+9, nil
 }
