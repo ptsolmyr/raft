@@ -31,10 +31,10 @@ func init() {
 // Logs
 //--------------------------------------
 
-func getLogPath() string {
-	f, _ := ioutil.TempFile("", "raft-log-")
-	f.Close()
-	os.Remove(f.Name())
+func GetLogPath() string {
+	f, _ := ioutil.TempFile("/Users/solmyr/go/src/github.com/ptsolmyr/goraft_example/", "raft-log-")
+	defer f.Close()
+	defer os.Remove(f.Name())
 	return f.Name()
 }
 
@@ -50,7 +50,7 @@ func setupLog(entries []*LogEntry) (*Log, string) {
 		panic(err)
 	}
 
-	log := newLog()
+	log := NewLog()
 	log.ApplyFunc = func(c Command) (interface{}, error) {
 		return nil, nil
 	}
@@ -103,7 +103,7 @@ func newTestServerWithLog(name string, transporter Transporter, entries []*LogEn
 
 func newTestCluster(names []string, transporter Transporter, lookup map[string]Server) []Server {
 	servers := []Server{}
-	e0, _ := newLogEntry(newLog(), nil, 1, 1, &testCommand1{Val: "foo", I: 20})
+	e0, _ := newLogEntry(NewLog(), nil, 1, 1, &testCommand1{Val: "foo", I: 20})
 
 	for _, name := range names {
 		if lookup[name] != nil {
