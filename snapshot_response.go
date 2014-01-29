@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 
 	"code.google.com/p/gogoprotobuf/proto"
-	"github.com/goraft/raft/protobuf"
+	"github.com/ptsolmyr/raft/protobuf"
 )
 
 // The response returned if the follower entered snapshot state

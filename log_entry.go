@@ -7,7 +7,7 @@ import (
 	"io"
 
 	"code.google.com/p/gogoprotobuf/proto"
-	"github.com/goraft/raft/protobuf"
+	"github.com/ptsolmyr/raft/protobuf"
 )
 
 // A log entry stores a single item in the log.
@@ -103,15 +103,6 @@ func (e *LogEntry) decode(r io.Reader) (int, error) {
 	if err = proto.Unmarshal(data, e.pb); err != nil {
 		return -1, err
 	}
-/*
-<<<<<<< HEAD
-	e.Term = pb.GetTerm()
-	e.Index = pb.GetIndex()
-	e.CommandName = pb.GetCommandName()
-	e.Command = pb.Command
 
-	return length+9, nil
-=======
-*/
 	return length + 8 + 1, nil
 }
